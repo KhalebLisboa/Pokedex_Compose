@@ -68,5 +68,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Coil
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation(libs.coil.compose)
+
+    //Hilt
+    implementation(libs.androidx.hilt.navigation.fragment)
 }
