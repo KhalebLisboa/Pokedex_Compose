@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
     namespace = "com.example.pokedexcompose"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.pokedexcompose"
@@ -45,6 +46,7 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/gradle/incremental.annotation.processors"
         }
     }
 }
@@ -61,6 +63,13 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.runtime.livedata)
+//    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -71,8 +80,5 @@ dependencies {
 
     // Coil
     implementation(libs.coil.compose)
-
-    //Hilt
-    implementation(libs.androidx.hilt.navigation.fragment)
 
 }
