@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt.android)
+    kotlin("kapt") // habilita o Kapt
+
 }
 
 android {
@@ -61,6 +64,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.logging.interceptor)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -68,11 +73,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.hilt.navigation.compose)
+
 
     // Coil
     implementation(libs.coil.compose)
 
-    //Hilt
-    implementation(libs.androidx.hilt.navigation.fragment)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
 }
