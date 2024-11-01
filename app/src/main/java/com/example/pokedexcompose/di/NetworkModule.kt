@@ -1,6 +1,7 @@
-package com.example.pokedexcompose
+package com.example.pokedexcompose.di
 
-import dagger.Binds
+import com.example.pokedexcompose.data.ApiService
+import com.example.pokedexcompose.data.PokemonRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,7 +46,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun providePokemonRepository(service : ApiService) : PokemonRepository{
+    fun providePokemonRepository(service : ApiService) : PokemonRepository {
         return PokemonRepository(service)
     }
 }

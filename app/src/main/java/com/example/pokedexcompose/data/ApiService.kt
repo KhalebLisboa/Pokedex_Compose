@@ -1,5 +1,6 @@
-package com.example.pokedexcompose
+package com.example.pokedexcompose.data
 
+import com.example.pokedexcompose.data.model.PokemonResponseDTO
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -1,6 +1,6 @@
-package com.example.pokedexcompose
+package com.example.pokedexcompose.data
 
-import dagger.hilt.android.AndroidEntryPoint
+import com.example.pokedexcompose.data.model.PokemonResponseDTO
 import retrofit2.Response
 import javax.inject.Inject
 
