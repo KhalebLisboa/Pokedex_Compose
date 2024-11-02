@@ -16,12 +16,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.pokedexcompose.data.MainViewModel
 import com.example.pokedexcompose.ui.theme.PokedexComposeTheme
@@ -63,37 +70,31 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun MainList(viewModel: MainViewModel = hiltViewModel()){
 
-    val items = viewModel.allPokemon.observeAsState(emptyList())
-    var offset = 0
+    val items by viewModel.allPokemon.collectAsStateWithLifecycle()
+    val size by remember{ mutableIntStateOf(items.size) }
     val context = LocalContext.current
-    Log.e("List size", items.value.size.toString())
+    Log.e("List size", items.size.toString())
 
-    LaunchedEffect(offset) {
-        viewModel.fetchAll(offset)
+    LaunchedEffect(Unit) {
+        viewModel.fetchAll(0)
     }
-    LaunchedEffect(items) {
-        Toast.makeText(context, "fetch list", Toast.LENGTH_SHORT).show()
-    }
+
     LazyColumn {
-        items(items.value){ pokemon ->
-            MainListItem(name = pokemon.name, onClick = {
-                offset += 20
-                viewModel.fetchAll(offset)
-                Toast.makeText(context, "Update offset: $offset", Toast.LENGTH_SHORT).show()
-                items.value.forEach {
-                    Log.e("test", it.name)
-                }
+        itemsIndexed(items){ position, pokemon ->
+            MainListItem(name = pokemon.name, index = position + 1, onClick = {
+                viewModel.updateOffset()
+                viewModel.fetchAll()
+
             })
-            Log.e("Test", pokemon.name)
         }
     }
 }
 
 @Composable
-fun MainListItem(modifier: Modifier = Modifier, name: String, onClick : () -> Unit) {
+fun MainListItem(modifier: Modifier = Modifier, name: String, index : Int, onClick : () -> Unit) {
     Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.clickable(onClick = onClick)) {
         AsyncImage(
-            model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/35.png",
+            model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$index.png",
             contentDescription = null,
             modifier = modifier
                 .size(80.dp)

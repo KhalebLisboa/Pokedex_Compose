@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedexcompose.data.model.PokemonResultDTO
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,21 +19,21 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private val _allPokemon : MutableLiveData<ArrayList<PokemonResultDTO>> = MutableLiveData(
-        arrayListOf(PokemonResultDTO(name = "Khaleb", url = ""))
+    private val _allPokemon : MutableStateFlow<List<PokemonResultDTO>> = MutableStateFlow(
+        emptyList()
     )
-    val allPokemon : LiveData<ArrayList<PokemonResultDTO>> get() = _allPokemon
+    val allPokemon : StateFlow<List<PokemonResultDTO>> = _allPokemon.asStateFlow()
 
     private var offset = 0
 
 
     fun fetchAll(offset: Int = this.offset) {
         viewModelScope.launch {
-            val updatedList : ArrayList<PokemonResultDTO> = _allPokemon.value!!
-            updatedList.addAll(repository.fetchAll(offset).body()!!.results)
-            _allPokemon.postValue(updatedList)
-            Log.e("private size", _allPokemon.value!!.size.toString())
-            Log.e("open size", allPokemon.value!!.size.toString())
+            val currentList = _allPokemon.value
+            val newItems = repository.fetchAll(offset).body()?.results ?: emptyList()
+
+            // Cria uma nova lista para forçar a atualização do estado
+            _allPokemon.value = (currentList + newItems)
         }
     }
 
