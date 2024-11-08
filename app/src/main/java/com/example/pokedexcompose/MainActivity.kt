@@ -46,6 +46,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.pokedexcompose.data.MainViewModel
+import com.example.pokedexcompose.data.model.PokemonWithDetails
+import com.example.pokedexcompose.data.pokemonWithDetailsMock
 import com.example.pokedexcompose.ui.theme.PokedexComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -78,7 +80,7 @@ fun MainList(viewModel: MainViewModel = hiltViewModel()) {
         columns = GridCells.Fixed(2)
     ) {
         itemsIndexed(items) { position, pokemon ->
-            MainListItem(name = pokemon.name, index = position + 1, onClick = {
+            MainListItem(pokemon = pokemon, index = position + 1, onClick = {
                 viewModel.updateOffset()
                 viewModel.fetchAll()
             })
@@ -87,7 +89,7 @@ fun MainList(viewModel: MainViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun MainListItem(modifier: Modifier = Modifier, name: String, index: Int, onClick: () -> Unit) {
+fun MainListItem(modifier: Modifier = Modifier, pokemon : PokemonWithDetails, index: Int, onClick: () -> Unit) {
     Box(
         modifier = modifier
             .padding(10.dp)
@@ -106,15 +108,15 @@ fun MainListItem(modifier: Modifier = Modifier, name: String, index: Int, onClic
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
-                    text = name,
+                    text = pokemon.name,
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                     ),
                 )
 
-                TextPokemonType(name)
-                TextPokemonType(name)
+                TextPokemonType(pokemon.details.types[0].type.name)
+//                TextPokemonType(name)
 
             }
             Box(
@@ -173,7 +175,7 @@ fun GreetingPreview() {
             contentPadding = PaddingValues(horizontal = 10.dp)
         ) {
             items(fakeList) {
-                MainListItem(modifier = Modifier, name = "pokemon", index = 1, onClick = {})
+                MainListItem(modifier = Modifier, pokemon = pokemonWithDetailsMock, index = 1, onClick = {})
             }
         }
     }
