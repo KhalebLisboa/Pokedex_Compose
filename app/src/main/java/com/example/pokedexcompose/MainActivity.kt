@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -78,15 +79,26 @@ fun MainList(viewModel: MainViewModel = hiltViewModel()) {
         viewModel.fetchAll(0)
     }
 
+    LaunchedEffect(Unit) {
+        snapshotFlow { items.size }
+            .collect { size ->
+                if (  size > 0) {
+                    viewModel.fetchAll()
+                }
+            }
+    }
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(2)
     ) {
         itemsIndexed(items) { position, pokemon ->
             MainListItem(pokemon = pokemon, index = position + 1, onClick = {
-                viewModel.updateOffset()
                 viewModel.fetchAll()
             })
         }
+
+
+
     }
 }
 

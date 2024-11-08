@@ -32,10 +32,7 @@ class MainViewModel @Inject constructor(
 
             // Cria uma nova lista para forçar a atualização do estado
             _allPokemon.value = (currentList + newItems)
+            this@MainViewModel.offset+=20
         }
-    }
-
-    fun updateOffset(){
-        offset += 20
     }
 }
