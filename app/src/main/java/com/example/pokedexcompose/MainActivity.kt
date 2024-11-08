@@ -18,10 +18,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
@@ -105,7 +107,6 @@ fun MainListItem(modifier: Modifier = Modifier, pokemon : PokemonWithDetails, in
                     .padding(start = 10.dp, top = 8.dp, bottom = 5.dp)
                     .fillMaxHeight()
                     .zIndex(2f),
-                verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
                     text = pokemon.name,
@@ -113,11 +114,16 @@ fun MainListItem(modifier: Modifier = Modifier, pokemon : PokemonWithDetails, in
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                     ),
+                    modifier = Modifier.padding(vertical = 5.dp)
                 )
 
-                TextPokemonType(pokemon.details.types[0].type.name)
-//                TextPokemonType(name)
-
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(pokemon.details.types){ type ->
+                        TextPokemonType(type.type.name)
+                    }
+                }
             }
             Box(
                 modifier = Modifier

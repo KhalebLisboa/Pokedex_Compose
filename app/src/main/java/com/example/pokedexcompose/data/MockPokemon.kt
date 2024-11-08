@@ -102,12 +102,12 @@ val pokemonResponse = PokemonDetailsDTO(
                 url = "https://pokeapi.co/api/v2/type/12/"
             )
         ),
-        Type(
-            type = TypeDetail(
-                name = "poison",
-                url = "https://pokeapi.co/api/v2/type/4/"
-            )
-        )
+//        Type(
+//            type = TypeDetail(
+//                name = "poison",
+//                url = "https://pokeapi.co/api/v2/type/4/"
+//            )
+//        )
     ),
     weight = 1000
 )
