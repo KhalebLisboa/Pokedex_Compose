@@ -1,9 +1,9 @@
 package com.example.pokedexcompose.data
 
 import com.example.pokedexcompose.data.model.PokemonDetailsDTO
-import com.example.pokedexcompose.data.model.PokemonResponseDTO
 import com.example.pokedexcompose.data.model.PokemonWithDetails
-import retrofit2.Response
+import com.example.pokedexcompose.data.model.Type
+import com.example.pokedexcompose.data.model.toPokeType
 import javax.inject.Inject
 
 class PokemonRepository @Inject constructor(
@@ -15,7 +15,11 @@ class PokemonRepository @Inject constructor(
             PokemonWithDetails(
                 name = item.name,
                 details = getPokemonData(index)
-            )
+            ).apply {
+                this.details.types.forEach { type: Type ->
+                    type.type.pokeType = type.type.name.toPokeType()
+                }
+            }
         }
     }
 

@@ -25,13 +25,11 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -79,14 +77,14 @@ fun MainList(viewModel: MainViewModel = hiltViewModel()) {
         viewModel.fetchAll(0)
     }
 
-    LaunchedEffect(Unit) {
-        snapshotFlow { items.size }
-            .collect { size ->
-                if (  size > 0) {
-                    viewModel.fetchAll()
-                }
-            }
-    }
+//    LaunchedEffect(Unit) {
+//        snapshotFlow { items.size }
+//            .collect { size ->
+//                if (  size > 0) {
+//                    viewModel.fetchAll()
+//                }
+//            }
+//    }
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2)
@@ -104,11 +102,13 @@ fun MainList(viewModel: MainViewModel = hiltViewModel()) {
 
 @Composable
 fun MainListItem(modifier: Modifier = Modifier, pokemon : PokemonWithDetails, index: Int, onClick: () -> Unit) {
+    val backgroundColor = pokemon.details.types.first().type.pokeType.color
+
     Box(
         modifier = modifier
             .padding(10.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.Cyan)
+            .background(backgroundColor)
             .fillMaxSize()
             .clickable(onClick = onClick)
             .aspectRatio(3f / 2f),
@@ -123,6 +123,7 @@ fun MainListItem(modifier: Modifier = Modifier, pokemon : PokemonWithDetails, in
                 Text(
                     text = pokemon.name,
                     style = TextStyle(
+                        color = Color.White,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                     ),
@@ -132,8 +133,8 @@ fun MainListItem(modifier: Modifier = Modifier, pokemon : PokemonWithDetails, in
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(pokemon.details.types){ type ->
-                        TextPokemonType(type.type.name)
+                    items(pokemon.details.types){ pokemon ->
+                        TextPokemonType(pokemon.type.name)
                     }
                 }
             }
@@ -162,22 +163,19 @@ fun MainListItem(modifier: Modifier = Modifier, pokemon : PokemonWithDetails, in
 }
 
 @Composable
-fun TextPokemonType(name: String){
-    Card(
-        modifier = Modifier.background(Color.Transparent)
-    ) {
+fun TextPokemonType(typeName : String){
         Text(
-            text = name,
+            text = typeName,
             style = TextStyle(
-                fontSize = 10.sp,
+                color = Color.White,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             ),
             modifier = Modifier
-                .background(Color.Red)
-                .padding(5.dp)
+                .background(Color.White.copy(alpha = .2f), shape = RoundedCornerShape(17.dp))
+                .padding(horizontal = 10.dp, vertical = 5.dp)
         )
-    }
 }
 
 @Preview(showBackground = true)

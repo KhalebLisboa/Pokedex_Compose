@@ -6,6 +6,7 @@ import com.example.pokedexcompose.data.model.Form
 import com.example.pokedexcompose.data.model.Move
 import com.example.pokedexcompose.data.model.MoveDetail
 import com.example.pokedexcompose.data.model.MoveLearnMethod
+import com.example.pokedexcompose.data.model.PokeType
 import com.example.pokedexcompose.data.model.PokemonDetailsDTO
 import com.example.pokedexcompose.data.model.PokemonWithDetails
 import com.example.pokedexcompose.data.model.Species
@@ -99,15 +100,17 @@ val pokemonResponse = PokemonDetailsDTO(
         Type(
             type = TypeDetail(
                 name = "grass",
-                url = "https://pokeapi.co/api/v2/type/12/"
+                url = "https://pokeapi.co/api/v2/type/12/",
+                pokeType = PokeType.Normal
             )
         ),
-//        Type(
-//            type = TypeDetail(
-//                name = "poison",
-//                url = "https://pokeapi.co/api/v2/type/4/"
-//            )
-//        )
+        Type(
+            type = TypeDetail(
+                name = "poison",
+                url = "https://pokeapi.co/api/v2/type/4/",
+                pokeType = PokeType.Normal
+            )
+        )
     ),
     weight = 1000
 )

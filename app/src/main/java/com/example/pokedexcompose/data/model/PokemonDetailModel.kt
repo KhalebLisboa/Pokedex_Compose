@@ -91,5 +91,30 @@ data class Type(
 
 data class TypeDetail(
     val name: String,
-    val url: String
+    val url: String,
+    var pokeType : PokeType
 )
+
+fun String.toPokeType() : PokeType{
+    return when (this.lowercase()) {
+        "normal" -> PokeType.Normal
+        "fighting" -> PokeType.Fighting
+        "flying" -> PokeType.Flying
+        "poison" -> PokeType.Poison
+        "ground" -> PokeType.Ground
+        "rock" -> PokeType.Rock
+        "bug" -> PokeType.Bug
+        "ghost" -> PokeType.Ghost
+        "steel" -> PokeType.Steel
+        "fire" -> PokeType.Fire
+        "water" -> PokeType.Water
+        "grass" -> PokeType.Grass
+        "electric" -> PokeType.Electric
+        "psychic" -> PokeType.Psychic
+        "ice" -> PokeType.Ice
+        "dragon" -> PokeType.Dragon
+        "dark" -> PokeType.Dark
+        "fairy" -> PokeType.Fairy
+        else -> PokeType.Normal
+    }
+}
