@@ -73,19 +73,6 @@ fun MainList(viewModel: MainViewModel = hiltViewModel()) {
 
     val items by viewModel.allPokemon.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.fetchAll(0)
-    }
-
-//    LaunchedEffect(Unit) {
-//        snapshotFlow { items.size }
-//            .collect { size ->
-//                if (  size > 0) {
-//                    viewModel.fetchAll()
-//                }
-//            }
-//    }
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(2)
     ) {
@@ -103,7 +90,12 @@ fun MainList(viewModel: MainViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun MainListItem(modifier: Modifier = Modifier, pokemon : PokemonWithDetails, index: Int, onClick: () -> Unit) {
+fun MainListItem(
+    modifier: Modifier = Modifier,
+    pokemon: PokemonWithDetails,
+    index: Int,
+    onClick: () -> Unit
+) {
     val backgroundColor = pokemon.details.types.first().type.pokeType.color
 
     Box(
@@ -115,69 +107,69 @@ fun MainListItem(modifier: Modifier = Modifier, pokemon : PokemonWithDetails, in
             .clickable(onClick = onClick)
             .aspectRatio(3f / 2f),
     ) {
-            Column(
-                horizontalAlignment = Alignment.Start,
-                modifier = Modifier
-                    .padding(start = 10.dp, top = 8.dp, bottom = 5.dp)
-                    .fillMaxHeight()
-                    .zIndex(2f),
-            ) {
-                Text(
-                    text = pokemon.name,
-                    style = TextStyle(
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                    ),
-                    modifier = Modifier.padding(vertical = 5.dp)
-                )
+        Column(
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier
+                .padding(start = 10.dp, top = 8.dp, bottom = 5.dp)
+                .fillMaxHeight()
+                .zIndex(2f),
+        ) {
+            Text(
+                text = pokemon.name,
+                style = TextStyle(
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                ),
+                modifier = Modifier.padding(vertical = 5.dp)
+            )
 
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(pokemon.details.types){ pokemon ->
-                        TextPokemonType(pokemon.type.name)
-                    }
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(pokemon.details.types) { pokemon ->
+                    TextPokemonType(pokemon.type.name)
                 }
             }
-            Box(
+        }
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+        ) {
+            Image(
+                painter = painterResource(R.drawable.img_pokeball),
+                contentDescription = null,
                 modifier = Modifier
+                    .size(90.dp)
                     .align(Alignment.BottomEnd)
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.img_pokeball),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(90.dp)
-                        .align(Alignment.BottomEnd)
-                        .offset(x = 10.dp, y = 15.dp)
-                        .alpha(.6f)
-                )
-                AsyncImage(
-                    model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$index.png",
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(100.dp)
-                        .align(Alignment.BottomEnd)
-                )
-            }
+                    .offset(x = 10.dp, y = 15.dp)
+                    .alpha(.6f)
+            )
+            AsyncImage(
+                model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$index.png",
+                contentDescription = null,
+                modifier = Modifier
+                    .size(100.dp)
+                    .align(Alignment.BottomEnd)
+            )
+        }
     }
 }
 
 @Composable
-fun TextPokemonType(typeName : String){
-        Text(
-            text = typeName,
-            style = TextStyle(
-                color = Color.White,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            ),
-            modifier = Modifier
-                .background(Color.White.copy(alpha = .2f), shape = RoundedCornerShape(17.dp))
-                .padding(horizontal = 10.dp, vertical = 5.dp)
-        )
+fun TextPokemonType(typeName: String) {
+    Text(
+        text = typeName,
+        style = TextStyle(
+            color = Color.White,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        ),
+        modifier = Modifier
+            .background(Color.White.copy(alpha = .2f), shape = RoundedCornerShape(17.dp))
+            .padding(horizontal = 10.dp, vertical = 5.dp)
+    )
 }
 
 @Preview(showBackground = true)
@@ -193,7 +185,11 @@ fun GreetingPreview() {
             contentPadding = PaddingValues(horizontal = 10.dp)
         ) {
             items(fakeList) {
-                MainListItem(modifier = Modifier, pokemon = pokemonWithDetailsMock, index = 1, onClick = {})
+                MainListItem(
+                    modifier = Modifier,
+                    pokemon = pokemonWithDetailsMock,
+                    index = 1,
+                    onClick = {})
             }
         }
     }
