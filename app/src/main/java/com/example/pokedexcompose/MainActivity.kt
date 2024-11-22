@@ -94,9 +94,11 @@ fun MainList(viewModel: MainViewModel = hiltViewModel()) {
                 viewModel.fetchAll()
             })
         }
-
-
-
+        item {
+            LaunchedEffect(true) {
+                viewModel.fetchAll()
+            }
+        }
     }
 }
 
