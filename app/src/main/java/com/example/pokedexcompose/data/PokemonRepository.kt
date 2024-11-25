@@ -12,9 +12,10 @@ class PokemonRepository @Inject constructor(
     suspend fun fetchAll(offset: Int) : List<PokemonWithDetails> {
         val listPokemon = service.fetchPokemonList(offset).body()
         return listPokemon!!.results.mapIndexed { index, item ->
+            val pokemonId = index + offset
             PokemonWithDetails(
                 name = item.name,
-                details = getPokemonData(index)
+                details = getPokemonData(pokemonId)
             ).apply {
                 this.details.types.forEach { type: Type ->
                     type.type.pokeType = type.type.name.toPokeType()

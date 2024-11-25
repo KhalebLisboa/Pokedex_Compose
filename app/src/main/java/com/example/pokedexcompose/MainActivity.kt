@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +21,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -27,6 +31,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -63,7 +69,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PokedexComposeTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) {
+                Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .windowInsetsPadding(WindowInsets.systemBars)
+                ) {
                     MainList()
                 }
             }
@@ -76,26 +86,29 @@ fun MainList(viewModel: MainViewModel = hiltViewModel()) {
 
     val items by viewModel.allPokemon.collectAsStateWithLifecycle()
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2)
-    ) {
-        itemsIndexed(items) { position, pokemon ->
-            MainListItem(pokemon = pokemon, index = position + 1, onClick = {
-                viewModel.fetchAll()
-            })
-        }
-        item(span = { GridItemSpan(2) }) {
-            LaunchedEffect(true) {
-                viewModel.fetchAll()
+    Column {
+        PokedexHeader()
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2)
+        ) {
+            items(items) { pokemon ->
+                MainListItem(pokemon = pokemon, onClick = {
+                    viewModel.fetchAll()
+                })
             }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .aspectRatio(2f / 1f),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
+            item(span = { GridItemSpan(2) }) {
+                LaunchedEffect(true) {
+                    viewModel.fetchAll()
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .aspectRatio(2f / 1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
         }
     }
@@ -105,7 +118,6 @@ fun MainList(viewModel: MainViewModel = hiltViewModel()) {
 fun MainListItem(
     modifier: Modifier = Modifier,
     pokemon: PokemonWithDetails,
-    index: Int,
     onClick: () -> Unit
 ) {
     val backgroundColor = pokemon.details.types.first().type.pokeType.color
@@ -158,7 +170,7 @@ fun MainListItem(
                     .alpha(.6f)
             )
             AsyncImage(
-                model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$index.png",
+                model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.details.id}.png",
                 contentDescription = null,
                 modifier = Modifier
                     .size(100.dp)
@@ -188,7 +200,16 @@ fun TextPokemonType(typeName: String) {
 @Composable
 fun GreetingPreview() {
     PokedexComposeTheme {
-        val fakeList = listOf("", "", "", "")
+        PreviewMainList()
+    }
+}
+
+@Composable
+fun PreviewMainList() {
+    val fakeList = listOf("", "", "", "")
+
+    Column {
+        PokedexHeader()
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -200,23 +221,52 @@ fun GreetingPreview() {
                 MainListItem(
                     modifier = Modifier,
                     pokemon = pokemonWithDetailsMock,
-                    index = 1,
                     onClick = {})
-
-                if (true) {
-                    this@LazyVerticalGrid.item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp)
-                                .aspectRatio(2f / 1f),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-                }
             }
         }
+    }
+}
+
+@Composable
+fun PokedexHeader() {
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 0.dp),
+            horizontalArrangement = Arrangement.Absolute.SpaceBetween
+        ) {
+            Button(
+                onClick = {},
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.ic_arrow_back),
+                    null
+                )
+            }
+            Button(
+                onClick = {},
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.ic_menu),
+                    null
+                )
+            }
+        }
+
+        Text(
+            "Pokedex",
+            modifier = Modifier.padding(start = 20.dp),
+            style = TextStyle(
+                color = Color.Black,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+            ),
+        )
     }
 }

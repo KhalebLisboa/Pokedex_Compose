@@ -2,15 +2,20 @@ package com.example.pokedexcompose.data
 
 import com.example.pokedexcompose.data.model.Ability
 import com.example.pokedexcompose.data.model.AbilityDetail
+import com.example.pokedexcompose.data.model.DreamWorldDTO
 import com.example.pokedexcompose.data.model.Form
+import com.example.pokedexcompose.data.model.HomeDTO
 import com.example.pokedexcompose.data.model.Move
 import com.example.pokedexcompose.data.model.MoveDetail
 import com.example.pokedexcompose.data.model.MoveLearnMethod
+import com.example.pokedexcompose.data.model.OfficialArtworkDTO
+import com.example.pokedexcompose.data.model.OtherSpritesDTO
 import com.example.pokedexcompose.data.model.PokeType
 import com.example.pokedexcompose.data.model.PokemonDetailsDTO
 import com.example.pokedexcompose.data.model.PokemonWithDetails
+import com.example.pokedexcompose.data.model.ShowdownDTO
 import com.example.pokedexcompose.data.model.Species
-import com.example.pokedexcompose.data.model.Sprites
+import com.example.pokedexcompose.data.model.SpritesDTO
 import com.example.pokedexcompose.data.model.Stat
 import com.example.pokedexcompose.data.model.StatDetail
 import com.example.pokedexcompose.data.model.Type
@@ -75,9 +80,7 @@ val pokemonResponse = PokemonDetailsDTO(
         name = "venusaur",
         url = "https://pokeapi.co/api/v2/pokemon-species/3/"
     ),
-    sprites = Sprites(
-        front_default = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png"
-    ),
+    sprites = getMockedSpritesDTO(),
     stats = listOf(
         Stat(
             base_stat = 80,
@@ -119,3 +122,43 @@ val pokemonWithDetailsMock = PokemonWithDetails(
     name = "Teste",
     details = pokemonResponse
 )
+
+fun getMockedSpritesDTO(): SpritesDTO {
+    return SpritesDTO(
+        back_default = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/41.png",
+        back_female = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/female/41.png",
+        back_shiny = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/41.png",
+        back_shiny_female = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/female/41.png",
+        front_default = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/41.png",
+        front_female = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/female/41.png",
+        front_shiny = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/41.png",
+        front_shiny_female = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/female/41.png",
+        other = OtherSpritesDTO(
+            dream_world = DreamWorldDTO(
+                front_default = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/41.svg",
+                front_female = null
+            ),
+            home = HomeDTO(
+                front_default = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/41.png",
+                front_female = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/female/41.png",
+                front_shiny = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/41.png",
+                front_shiny_female = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/female/41.png"
+            ),
+            official_artwork = OfficialArtworkDTO(
+                front_default = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/41.png",
+                front_shiny = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/41.png"
+            ),
+            showdown = ShowdownDTO(
+                back_default = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/41.gif",
+                back_female = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/female/41.gif",
+                back_shiny = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/41.gif",
+                back_shiny_female = null,
+                front_default = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/41.gif",
+                front_female = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/female/41.gif",
+                front_shiny = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/41.gif",
+                front_shiny_female = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/female/41.gif"
+            )
+        )
+    )
+}
+

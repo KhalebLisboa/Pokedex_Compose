@@ -17,7 +17,7 @@ data class PokemonDetailsDTO(
     val name: String,
     val order: Int,
     val species: Species,
-    val sprites: Sprites,
+    val sprites: SpritesDTO,
     val stats: List<Stat>,
     val types: List<Type>,
     val weight: Int
@@ -70,9 +70,53 @@ data class Species(
     val url: String
 )
 
-data class Sprites(
-    val front_default: String
+data class SpritesDTO(
+    val back_default: String?,
+    val back_female: String?,
+    val back_shiny: String?,
+    val back_shiny_female: String?,
+    val front_default: String,
+    val front_female: String?,
+    val front_shiny: String?,
+    val front_shiny_female: String?,
+    val other: OtherSpritesDTO
 )
+
+data class OtherSpritesDTO(
+    val dream_world: DreamWorldDTO,
+    val home: HomeDTO,
+    val official_artwork: OfficialArtworkDTO,
+    val showdown: ShowdownDTO
+)
+
+data class DreamWorldDTO(
+    val front_default: String?,
+    val front_female: String?
+)
+
+data class HomeDTO(
+    val front_default: String?,
+    val front_female: String?,
+    val front_shiny: String?,
+    val front_shiny_female: String?
+)
+
+data class OfficialArtworkDTO(
+    val front_default: String,
+    val front_shiny: String?
+)
+
+data class ShowdownDTO(
+    val back_default: String?,
+    val back_female: String?,
+    val back_shiny: String?,
+    val back_shiny_female: String?,
+    val front_default: String?,
+    val front_female: String?,
+    val front_shiny: String?,
+    val front_shiny_female: String?
+)
+
 
 data class Stat(
     val base_stat: Int,
