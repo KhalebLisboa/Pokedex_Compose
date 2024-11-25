@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,14 +20,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -44,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -72,7 +69,6 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
-                        .windowInsetsPadding(WindowInsets.systemBars)
                 ) {
                     MainList()
                 }
@@ -86,28 +82,41 @@ fun MainList(viewModel: MainViewModel = hiltViewModel()) {
 
     val items by viewModel.allPokemon.collectAsStateWithLifecycle()
 
-    Column {
-        PokedexHeader()
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2)
-        ) {
-            items(items) { pokemon ->
-                MainListItem(pokemon = pokemon, onClick = {
-                    viewModel.fetchAll()
-                })
-            }
-            item(span = { GridItemSpan(2) }) {
-                LaunchedEffect(true) {
-                    viewModel.fetchAll()
+    Box{
+        Image(
+            painter = painterResource(R.drawable.img_pokeball),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(Color.Black.copy(alpha = .2f)),
+            modifier = Modifier
+                .size(200.dp)
+                .align(Alignment.TopEnd)
+                .offset(x = 70.dp, y = (-35).dp)
+                .alpha(.6f)
+        )
+
+        Column {
+            PokedexHeader()
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2)
+            ) {
+                items(items) { pokemon ->
+                    MainListItem(pokemon = pokemon, onClick = {
+                        viewModel.fetchAll()
+                    })
                 }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .aspectRatio(2f / 1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
+                item(span = { GridItemSpan(2) }) {
+                    LaunchedEffect(true) {
+                        viewModel.fetchAll()
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .aspectRatio(2f / 1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
         }
@@ -116,9 +125,7 @@ fun MainList(viewModel: MainViewModel = hiltViewModel()) {
 
 @Composable
 fun MainListItem(
-    modifier: Modifier = Modifier,
-    pokemon: PokemonWithDetails,
-    onClick: () -> Unit
+    modifier: Modifier = Modifier, pokemon: PokemonWithDetails, onClick: () -> Unit
 ) {
     val backgroundColor = pokemon.details.types.first().type.pokeType.color
 
@@ -134,19 +141,32 @@ fun MainListItem(
         Column(
             horizontalAlignment = Alignment.Start,
             modifier = Modifier
-                .padding(start = 10.dp, top = 8.dp, bottom = 5.dp)
+                .padding(start = 10.dp, top = 8.dp, bottom = 5.dp, end = 10.dp)
                 .fillMaxHeight()
                 .zIndex(2f),
         ) {
-            Text(
-                text = pokemon.name,
-                style = TextStyle(
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                ),
-                modifier = Modifier.padding(vertical = 5.dp)
-            )
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 5.dp)
+            ) {
+                Text(
+                    text = pokemon.name, style = TextStyle(
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                )
+
+                Text(
+                    text = "#%03d".format(pokemon.details.id), style = TextStyle(
+                        color = Color.Black.copy(alpha = .3f),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                )
+            }
 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -157,12 +177,12 @@ fun MainListItem(
             }
         }
         Box(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
+            modifier = Modifier.align(Alignment.BottomEnd)
         ) {
             Image(
                 painter = painterResource(R.drawable.img_pokeball),
                 contentDescription = null,
+                colorFilter = ColorFilter.tint(Color.White.copy(alpha = .8f)),
                 modifier = Modifier
                     .size(90.dp)
                     .align(Alignment.BottomEnd)
@@ -191,7 +211,9 @@ fun TextPokemonType(typeName: String) {
             textAlign = TextAlign.Center
         ),
         modifier = Modifier
-            .background(Color.White.copy(alpha = .2f), shape = RoundedCornerShape(17.dp))
+            .background(
+                Color.White.copy(alpha = .2f), shape = RoundedCornerShape(17.dp)
+            )
             .padding(horizontal = 10.dp, vertical = 5.dp)
     )
 }
@@ -208,20 +230,33 @@ fun GreetingPreview() {
 fun PreviewMainList() {
     val fakeList = listOf("", "", "", "")
 
-    Column {
-        PokedexHeader()
+    Box{
+        Image(
+            painter = painterResource(R.drawable.img_pokeball),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(Color.Black.copy(alpha = .2f)),
+            modifier = Modifier
+                .size(200.dp)
+                .align(Alignment.TopEnd)
+                .offset(x = 70.dp, y = (-35).dp)
+                .alpha(.6f)
+        )
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = PaddingValues(horizontal = 10.dp)
-        ) {
-            items(fakeList) {
-                MainListItem(
-                    modifier = Modifier,
-                    pokemon = pokemonWithDetailsMock,
-                    onClick = {})
+        Column {
+            PokedexHeader()
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                contentPadding = PaddingValues(horizontal = 10.dp)
+            ) {
+                items(fakeList) {
+                    MainListItem(
+                        modifier = Modifier,
+                        pokemon = pokemonWithDetailsMock,
+                        onClick = {})
+                }
             }
         }
     }
@@ -229,7 +264,7 @@ fun PreviewMainList() {
 
 @Composable
 fun PokedexHeader() {
-    Column {
+    Column(modifier = Modifier.padding(top = 40.dp, bottom = 30.dp)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -243,8 +278,7 @@ fun PokedexHeader() {
                 modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 Image(
-                    painter = painterResource(R.drawable.ic_arrow_back),
-                    null
+                    painter = painterResource(R.drawable.ic_arrow_back), null
                 )
             }
             Button(
@@ -253,8 +287,7 @@ fun PokedexHeader() {
                 modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 Image(
-                    painter = painterResource(R.drawable.ic_menu),
-                    null
+                    painter = painterResource(R.drawable.ic_menu), null
                 )
             }
         }
